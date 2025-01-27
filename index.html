@@ -4,44 +4,40 @@
     <script src="animation.js" type="application/javascript"></script>
     <script type="application/javascript">
         var frame;
-		var cannonAngle = 0;
+		const colors = ["red","yellow","blue","brown","purple","orange"];
 
         window.addEventListener('load', (event) => {
             console.log('page is fully loaded');
 
+			// Initialize Game Frame
             var frame_elem = document.getElementById('animationFrame');
             frame = Object.create(Frame);
             frame.init(document.getElementById('animationFrame'));
+			frame.cannon.angle = 45;
 
-            var sprite1 = Object.create(Sprite);
-            sprite1.begin(5,5,1.5,15);
-            sprite1.color = 'blue';
-            frame.addSprite(sprite1);
+			// Add Balls to Game Frame
+			for (var i = 0; i < 5; i++) {
+	            let ball = Object.create(Sprite);
+            	ball.begin((Math.random()*frame.width),5,1+i,15);
+            	ball.color = colors[parseInt(Math.random()*6)];
+				ball.weight = 0.02;
+				ball.radius = 12 + Math.random()*20;
+        	    frame.addSprite(ball);
+			}
 
-            var sprite2 = Object.create(Sprite);
-            sprite2.begin(10,10,-2.1,13);
-            sprite2.color = 'red';
-            frame.addSprite(sprite2);
-
-            var sprite3 = Object.create(Sprite);
-            sprite3.begin(100,10,1.8,17);
-            sprite3.color = 'green';
-            frame.addSprite(sprite3);
-
-			var sprite4 = Object.create(Sprite);
-			sprite4.begin(100,10,1.8,17);
-			sprite4.color = 'yellow';
-			frame.addSprite(sprite4);
-
-			var sprite5 = Object.create(Sprite);
-			sprite5.begin(100,10,1.8,17);
-			sprite5.color = 'purple';
-			frame.addSprite(sprite5);
-
+			// Start the Game
             frame.go();
         });
 
-		// event = keyup or keydown
+		// Listen for mouse clicks
+		document.addEventListener('click', function(event) {
+			const x = event.clientX;
+			const y = event.clientY;
+
+			console.log('Mouse clicked at:', x, y);
+		});
+
+		// Listen for Keyboard Events
 		document.addEventListener(
 			'keyup',
 			event => {
@@ -53,9 +49,10 @@
 					console.log('mouseX: ' + mouseX);
 					console.log('mouseY: ' + mouseY);
 
+					// Fire a shot!
 					bullet = Object.create(Sprite);
-					bullet.begin(frame.cannon.tipX(),frame.cannon.tipY(),frame.cannon.xComp()/2,frame.cannon.yComp()/2);
-					bullet.weight = 0;
+					bullet.begin(frame.cannon.nozzleX(),frame.cannon.nozzleY(),frame.cannon.xComp()/2,frame.cannon.yComp()/2);
+					bullet.weight = 0.025;
 					bullet.color = 'black';
 					bullet.restrain = false;
 					bullet.radius = 5;
