@@ -1,0 +1,98 @@
+<html>
+<head>
+    <title>Tony's Animation Test</title>
+    <script src="animation.js" type="application/javascript"></script>
+    <script type="application/javascript">
+        var frame;
+		var cannonAngle = 0;
+
+        window.addEventListener('load', (event) => {
+            console.log('page is fully loaded');
+
+            var frame_elem = document.getElementById('animationFrame');
+            frame = Object.create(Frame);
+            frame.init(document.getElementById('animationFrame'));
+
+            var sprite1 = Object.create(Sprite);
+            sprite1.begin(5,5,1.5,15);
+            sprite1.color = 'blue';
+            frame.addSprite(sprite1);
+
+            var sprite2 = Object.create(Sprite);
+            sprite2.begin(10,10,-2.1,13);
+            sprite2.color = 'red';
+            frame.addSprite(sprite2);
+
+            var sprite3 = Object.create(Sprite);
+            sprite3.begin(100,10,1.8,17);
+            sprite3.color = 'green';
+            frame.addSprite(sprite3);
+
+			var sprite4 = Object.create(Sprite);
+			sprite4.begin(100,10,1.8,17);
+			sprite4.color = 'yellow';
+			frame.addSprite(sprite4);
+
+			var sprite5 = Object.create(Sprite);
+			sprite5.begin(100,10,1.8,17);
+			sprite5.color = 'purple';
+			frame.addSprite(sprite5);
+
+            frame.go();
+        });
+
+		// event = keyup or keydown
+		document.addEventListener(
+			'keyup',
+			event => {
+				if (event.code === 'Space') {
+					const mouseX = event.clientX;
+					const mouseY = event.clientY;
+					const angle = mouseY/mouseX;
+					console.log('Space key pressed');
+					console.log('mouseX: ' + mouseX);
+					console.log('mouseY: ' + mouseY);
+
+					bullet = Object.create(Sprite);
+					bullet.begin(frame.cannon.tipX(),frame.cannon.tipY(),frame.cannon.xComp()/2,frame.cannon.yComp()/2);
+					bullet.weight = 0;
+					bullet.color = 'black';
+					bullet.restrain = false;
+					bullet.radius = 5;
+					bullet.type = 'bullet';
+					frame.addSprite(bullet);
+					frame.bulletCount--;
+				}
+				else if (event.code === 'ArrowLeft') {
+					console.log('ArrowLeft key pressed');
+					frame.cannon.angle += 5;
+					if (frame.cannon.angle >= 359) {
+						frame.cannon.angle = 359;
+					}
+					console.log('cannonAngle: ' + frame.cannon.angle);
+				}
+				else if (event.code === 'ArrowRight') {
+					console.log('ArrowRight key pressed');
+					frame.cannon.angle -= 5;
+					if (frame.cannon.angle < 0) {
+						frame.cannon.angle = 0;
+					}
+					console.log('cannonAngle: ' + frame.cannon.angle);
+				}
+				else {
+					console.log('Unknown key pressed');
+				}
+			}
+		)
+
+    </script>
+    <style>
+        #animationFrame {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+<canvas id="animationFrame" width="1200px" height="960px"></canvas>
+</body>
+</html>
