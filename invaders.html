@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Tony's Animation Test</title>
+    <title>Invaders!</title>
     <script src="animation.js" type="application/javascript"></script>
     <script type="application/javascript">
         var frame;
@@ -13,7 +13,7 @@
             var frame_elem = document.getElementById('animationFrame');
             frame = Object.create(Frame);
             frame.init(document.getElementById('animationFrame'));
-			frame.cannon.angle = 45;
+			frame.cannon.angle = 90;
 
 			frame.addTargets(10);
 
@@ -56,7 +56,7 @@
 
 		// Listen for Keyboard Events
 		document.addEventListener(
-			'keyup',
+			'keydown',
 			event => {
 				if (event.code === 'Space') {
 					const mouseX = event.clientX;
@@ -79,17 +79,25 @@
 				}
 				else if (event.code === 'ArrowLeft') {
 					//console.log('ArrowLeft key pressed');
-					frame.cannon.angle += 5;
-					if (frame.cannon.angle >= 359) {
-						frame.cannon.angle = 359;
+					if (frame.cannon.mobileX) {
+						frame.cannon.xForce = -.2;
 					}
-					//console.log('cannonAngle: ' + frame.cannon.angle);
+					else {
+						if (frame.cannon.angle >= 359) {
+							frame.cannon.angle = 359;
+						}
+						//console.log('cannonAngle: ' + frame.cannon.angle);
+					}
 				}
 				else if (event.code === 'ArrowRight') {
 					//console.log('ArrowRight key pressed');
-					frame.cannon.angle -= 5;
-					if (frame.cannon.angle < 0) {
-						frame.cannon.angle = 0;
+					if (frame.cannon.mobileX) {
+						frame.cannon.xForce = .2;
+					}
+					else {
+						if (frame.cannon.angle < 0) {
+							frame.cannon.angle = 0;
+						}
 					}
 					//console.log('cannonAngle: ' + frame.cannon.angle);
 				}
@@ -99,6 +107,22 @@
 			}
 		)
 
+		document.addEventListener(
+			'keyup',
+			event => {
+				if (event.code === 'ArrowLeft') {
+					//console.log('ArrowLeft key released');
+					frame.cannon.xForce = 0;
+				}
+				else if (event.code === 'ArrowRight') {
+					//console.log('ArrowRight key released');
+					frame.cannon.xForce = 0;
+				}
+				else {
+					console.log('Unknown key released');
+				}
+			}
+		)
     </script>
     <style>
         #animationFrame {
@@ -107,6 +131,6 @@
     </style>
 </head>
 <body>
-<canvas id="animationFrame" width="1200px" height="800px"></canvas>
+<canvas id="animationFrame" width="1000px" height="700px"></canvas>
 </body>
 </html>
